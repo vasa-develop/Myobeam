@@ -48,7 +48,7 @@ public class GPS_Activity extends AppCompatActivity {
     private String text="";
 
     final static String fileName = "data.txt";
-    final static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/instinctcoder/readwrite/" ;
+    final static String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     final static String TAG = GPS_Activity.class.getName();
 
 
@@ -80,7 +80,8 @@ public class GPS_Activity extends AppCompatActivity {
 
                 loc.append("\n" + "Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location.getLongitude());
 
-                text = text+"Time: "+currentDateTimeString+" Latitude: " + location.getLatitude()+ "Longitude: " + location.getLongitude();
+                text = text+" Time: "+currentDateTimeString+" Latitude: " + location.getLatitude()+ " Longitude: " + location.getLongitude();
+
                 //loc.setText("\n" + "Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location.getLongitude());
             }
 
@@ -125,7 +126,7 @@ public class GPS_Activity extends AppCompatActivity {
             case 10:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     configureButton();
-                    return;
+                    //return;
                 }
         }
     }
@@ -152,14 +153,17 @@ public class GPS_Activity extends AppCompatActivity {
     }
 
     public static boolean saveToFile( String data){
+
         try {
-            new File(path  ).mkdir();
+            Log.d("Text: ",data);
+            new File(path ).mkdir();
             File file = new File(path+ fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
             FileOutputStream fileOutputStream = new FileOutputStream(file,true);
-            fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
+            fileOutputStream.write((data.getBytes() + System.getProperty("line.separator")).getBytes());
+            fileOutputStream.close();
 
             return true;
         }  catch(FileNotFoundException ex) {
